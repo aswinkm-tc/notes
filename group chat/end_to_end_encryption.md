@@ -18,7 +18,7 @@ We want to ensure that:
 * Device flexibility (multi-device support).
 
 ## Architecture
-[Whatsapp End To End Encryption](../assets/whatsapp_end_to_end.png)
+![Whatsapp End To End Encryption](../assets/whatsapp_end_to_end.png)
 ## Key Concepts / Protocols
 WhatsApp uses the Signal Protocol, which combines:
 * Double Ratchet Algorithm – ensures forward secrecy and post-compromise security.
