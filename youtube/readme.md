@@ -233,37 +233,41 @@ Sometimes, the metadata is modified after the packager creates it. This is usual
 # Global Delivery Network
 ```mermaid
 graph TD
-    subgraph "The User's Device"
+    subgraph UserDev ["The User's Device"]
         Client[Mobile/Web Player]
     end
 
-    subgraph "Level 1: The ISP Edge (GGC)"
+    subgraph ISP ["Level 1: The ISP Edge (GGC)"]
         GGC[Google Global Cache - ISP Racks]
     end
 
-    subgraph "Level 2: The Regional PoP"
+    subgraph PoP ["Level 2: The Regional PoP"]
         Anycast[Anycast DNS / Maglev LB]
         EdgeCache[Edge Cache Node]
     end
 
-    subgraph "Level 3: The Control Plane (Google Cloud)"
+    subgraph ControlPlane ["Level 3: The Control Plane (Google Cloud)"]
         API[Video Metadata API]
         Manifest[Manifest Generator]
         Auth[Auth / DRM Service]
     end
 
-    subgraph "Level 4: The Origin (Source of Truth)"
+    subgraph Origin ["Level 4: The Origin (Source of Truth)"]
         ObjectStore[(Global Object Storage)]
     end
 
+    %% Step 1: Control Plane Handshake
     Client -->|1. Get Metadata| API
     API -->|2. Get Session/Auth| Auth
     API -->|3. Generate Custom Manifest| Manifest
-    Manifest -->> Client
+    Manifest -->|Return Manifest| Client
     
+    %% Step 2: Data Retrieval
     Client -->|4. Request Chunk| GGC
     GGC -.->|Cache Miss| EdgeCache
     EdgeCache -.->|Cache Miss| ObjectStore
+    
+    %% Step 3: Stream Delivery
     ObjectStore -->|Stream Byte Range| EdgeCache
     EdgeCache -->|Stream| GGC
     GGC -->|Stream| Client
