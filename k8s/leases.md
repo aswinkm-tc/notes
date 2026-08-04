@@ -20,7 +20,11 @@ spec:
 ```
 
 **holderIdentity:** Identifies the current owner of the lease (e.g., a specific pod name or hostname).
+
 **leaseDurationSeconds:** The duration that non-holding candidates must wait before they can force-acquire an expired lease.
+
 **renewTime:** The timestamp of when the current holder last updated (renewed) the lease. If this gets too old, another instance can step in and take over.
+
 **acquireTime:** The timestamp of when the current holder initially acquired the lease.
+
 **leaseTransitions:** A counter tracking how many times the lease has changed hands.
